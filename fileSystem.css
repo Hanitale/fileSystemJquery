@@ -1,0 +1,126 @@
+html,body{
+    height: 100%;
+    margin: 0;
+    font-family:"Comic Sans MS";
+    background-color: aquamarine;}
+
+#root[data-state = collapsed]:before {
+    content: '+';
+}
+#root[data-state = expanded]:before {
+    content: '-';
+}
+li.lifolder[data-state = collapsed]:before {
+    content: '+';
+}
+
+li.lifolder[data-state = expanded]:before {
+    content: '-';
+}
+/*li.lifolder[data-state=collapsed].parent {*/
+    /*display: none;*/
+/*}*/
+li{
+padding-left: 20px;
+}
+a:link{
+    text-decoration: none;
+}
+
+a:visited{
+color: black;
+}
+
+ul{
+
+    font-size: 20px;
+    list-style-type: none;
+}
+img{
+    width: 20px;
+    height:20px;
+}
+
+table {
+    border-width: 5px;
+    border-color: black;
+    height: 100%;
+    width: 100%;
+    background-color: greenyellow;
+}
+
+.topPart{
+    padding-left: 10px;
+    height: 10px;
+    background-color: aquamarine;
+    outline-style: solid;
+}
+
+#browser{
+    width:30%;
+    background-color: chartreuse;
+    vertical-align: top;
+    display:flex;
+    flex-direction: row;
+}
+#content{
+    width:70%;
+    padding:20px;
+    vertical-align: top;
+    background-color: aqua;
+}
+.small{
+    width: 50px;
+    font-weight:bold;
+    outline-width: thin;
+    outline-style: solid;
+    font-size: 2em;
+}
+
+#fileSystem {
+    align-content: flex-start;
+    display: flex;
+    flex-flow: row;
+    overflow: scroll;
+}
+
+
+ul.rightMenu{
+    font-family:"Arial Narrow";
+    text-align: left;
+    visibility: visible;
+    font-size: 12px;
+    height:80px;
+    white-space:nowrap;
+
+}
+
+menu {
+    position: absolute;
+    background-color: #fff;
+    width: 150px;
+    padding: 0px;
+    margin: 0px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.8);
+    display: none;
+}
+
+menu > menuitem {
+    display: block;
+    padding: 10px;
+    border-bottom: 1px solid #e1e1e1;
+    font-size: 1em;
+}
+
+menu > menuitem:hover {
+    background-color: #e1e1e1;
+    cursor: pointer;
+}
+span{
+    padding-left: 10px;
+}
+
+li[data-state=collapsed] ul.toEmpty{
+
+    display:none;
+}
