@@ -10,8 +10,20 @@ html,body{
 #root[data-state = expanded]:before {
     content: '-';
 }
-li.lifolder[data-state = collapsed]:before {
+
+.lifolder > ul.expanded{
+    display: none;
+
+}
+.lifolder > ul.collapsed:before {
     content: '+';
+}
+.lifolder > ul.expanded:before {
+    content: '-';
+}
+.lifolder > ul.collapsed >ul{
+    display: block;
+
 }
 
 li.lifolder[data-state = expanded]:before {
@@ -25,6 +37,7 @@ padding-left: 20px;
 }
 a:link{
     text-decoration: none;
+    color: black;
 }
 
 a:visited{
@@ -37,8 +50,8 @@ ul{
     list-style-type: none;
 }
 img{
-    width: 20px;
-    height:20px;
+    width: 25px;
+    height:25px;
 }
 
 table {
@@ -56,19 +69,21 @@ table {
     outline-style: solid;
 }
 
-#browser{
+.browser{
     width:30%;
     background-color: chartreuse;
     vertical-align: top;
     display:flex;
     flex-direction: row;
 }
-#content{
+.content{
+    display: inline-block;
     width:70%;
     padding:20px;
     vertical-align: top;
     background-color: aqua;
 }
+
 .small{
     width: 50px;
     font-weight:bold;
@@ -77,8 +92,8 @@ table {
     font-size: 2em;
 }
 
-#fileSystem {
-    align-content: flex-start;
+.fileSystem {
+    /*align-content: flex-start;*/
     display: flex;
     flex-flow: row;
     overflow: scroll;
@@ -95,6 +110,16 @@ ul.rightMenu{
 
 }
 
+span{
+    padding-left: 10px;
+}
+
+/*li[data-state=collapsed] ul.toEmpty{*/
+
+    /*display:none;*/
+/*}*/
+
+/*menu items #########################################################*/
 menu {
     position: absolute;
     background-color: #fff;
@@ -115,12 +140,4 @@ menu > menuitem {
 menu > menuitem:hover {
     background-color: #e1e1e1;
     cursor: pointer;
-}
-span{
-    padding-left: 10px;
-}
-
-li[data-state=collapsed] ul.toEmpty{
-
-    display:none;
 }

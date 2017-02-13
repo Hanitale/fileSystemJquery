@@ -1,39 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="html">
 <head>
     <meta charset="UTF-8">
     <title>Hanita's File System</title>
     <link rel="stylesheet" href="fileSystem.css">
 
-
-
 </head>
 <body>
+
 <table class="topPart">
     <tr>
         <td class="small"> < </td>
         <td class="small" align="right"> > </td>
-        <td id="path"> </td>
-        <td>Search <input type="text" id="search"></td>
+        <td class="path"> </td>
+        <td>Search <input type="text" class="search"></td>
     </tr>
 </table>
-<div id="fileSystem">
-    <div id="browser">
-            <ul id="folderList"></ul>
+<div class="fileSystem">
+    <div class="browser">
+            <ul class="folderList"></ul>
     </div>
- <div id="content"></div>
+
+ <div class="content"></div>
     <menu type="context" class= "custom-menu">
         <label></label>
-        <menuitem data-id ="open">Open Folder</menuitem>
         <menuitem data-id ="update">Update Folder</menuitem>
-        <menuitem data-id ="create">New Folder</menuitem>
+        <menuitem data-id ="create">Create Folder</menuitem>
+        <menuitem data-id ="open">Open File</menuitem>
         <menuitem data-id ="delete">Delete</menuitem>
     </menu>
 </div>
-<script
-        src="https://code.jquery.com/jquery-3.1.1.js"
-        integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
-        crossorigin="anonymous"></script>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="bl.js"></script>
 <script src="rightMenu.js"></script>
 <script src="fileSystemUi.js"></script>
 </body>
