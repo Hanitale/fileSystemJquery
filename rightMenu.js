@@ -19,8 +19,8 @@ $('.custom-menu').click(function(e){
     switch($(e.target).attr('data-id')){
         case "update": console.log("update"); break;
         case "create": createNew();
-        case "delete": console.log("delete"); break;
         case "open": console.log("open"); break;
+        case "delete": deleteItem();
     }
     $('.custom-menu').hide(100);
 });

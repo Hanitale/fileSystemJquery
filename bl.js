@@ -52,6 +52,20 @@ function fsRecursion(root, visitor) {
     }
 
 }
+function getIndexInChildrenArray(itemName){
+    if(itemName!='root'){
+        for(var x=0; x <root.children.length; x++) {
+            if(root.children[x].name == itemName) {
+                var index = x;
+                return index;
+            }
+        }
+    } else {
+        return root;
+    }
+    return false;
+    // throw new Error("Couldn't find a folder by that name");
+}
 
 function findItemByName(itemName) {
     if(itemName!='root'){
@@ -75,30 +89,16 @@ function findItemById(id, fileSystem) {
         if(item.id == id) {
             return item;
         } else if(item.children){
-             var sub= findItemById(id, item);
-            if(sub) return sub;
+             var folder = findItemById(id, item);
+            if(folder) return folder;
         }
     }
     return false;
 }
+function clearMessage(){
 
-function buildTree(id, fileSystem) {
-    fileSystem = fileSystem || root;
-    for(var item of fileSystem.children) {
-        if(item.children){
-            var sub= buildTree(id, item);
-            if(sub) return sub;
-        } else{
-            buildMe(item);
-        }
-    }
-    return false;
+    $('.messageArea').css('display', 'none');
 }
-
-function buildMe(){
-    var li = 0;
-}
-
 function openFile() {
     var fileName = readlineSync.question('Enter name of File to open');
     var index = fsRecursion(root, findItemByName);

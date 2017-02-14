@@ -1,14 +1,14 @@
 
 function createNew(){
-    debugger;
     var newItem = prompt('Enter name of File or Folder to add');
     var ifExists = findItemByName(newItem);
     if(!ifExists){
         ++lastId;
         var itemContent = prompt('Enter text if file');
         if (itemContent < 1) {
-            currentFolder.children.push({type: 'folder', id: lastId, name: newItem, children: []});
-            showFolderList();
+            var newFolder = {type: 'folder', id: lastId, name: newItem, children: []}
+            currentFolder.children.push(newFolder);
+            updateFolderList(newFolder);
         } else {
             currentFolder.children.push({type: 'file', id: lastId, name: newItem, content: itemContent});
           }
@@ -18,31 +18,41 @@ function createNew(){
     }
 }
 
-function createItem() {
-    var li = $('<li class="folder"> <img src="folders.png">'+ currentFolder.children[-1].name +'</li>');
-    var ul = $('<ul></ul>');
-    li.appendTo(ul);
-    $(this).after(ul);
-    return false;
+function updateFolderList(item){
+    var htmlToAppend = '<li class="liFolder'+item.id+'"><a href="#" data-id="'
+        + item.id +
+        '" ><img src="folders.png"> '
+        + item.name + '</a><ul class="collapsed"></ul></li>';
+    var whereToAppend = '.liFolder' + currentFolder.id + '> ul';
+    $(whereToAppend).append(htmlToAppend);
 }
 
 function deleteItem(){
     var itemToDelete = prompt('Enter name of item to delete');
-    var index = findItemByName(currentFolder, itemToDelete);
-    if(!index){
-        alert('No Such File');
+    var ifExists = getIndexInChildrenArray(itemToDelete);
+    if(!ifExists){
+        alert('No Such File or Folder');
     } else {
         var areYouSure = prompt('Are you sure? y/n');
         if (areYouSure == 'n') {
             alert('action cancelled');
         } else {
+            var index = ifExists
             currentFolder.children.splice(index, 1);
         }
-        alert(itemToDelete, "has been deleted");
 
-        showFileSystem(myJqueryId, currentFolder);
+        updateFolderListAfterDeletion(ifExists.id);
+        showContent();
+        $('.messageArea').text(itemToDelete + " has been deleted");
+        setTimeout(clearMessage, 3000);
     }
 }
+
+function updateFolderListAfterDeletion(id){
+    var whereToAppend = '.liFolder' + id +'>ul';
+    $(whereToAppend).remove()
+}
+
 
 function saveToTextFile(){
         var fs = require('fs');
