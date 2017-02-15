@@ -68,7 +68,7 @@ function getIndexInFathersChildrenArrayByName(itemName){
 }
 
 function getIndexInFathersChildrenArrayById(id, fileSystem){
-    debugger;
+
     fileSystem = fileSystem || root;
     for(var x=0; x <fileSystem.children.length; x++) {
         if(fileSystem.children[x].id == id) {
@@ -126,7 +126,7 @@ function openFile(id) {
         // $('textarea').val('');
         showContent();
     })
-    debugger;
+
      console.log(whoClicked + 'clicked, currentFolder is' +  currentFolder.name );
      var index = getIndexInFathersChildrenArrayById(id);
     if(index) {

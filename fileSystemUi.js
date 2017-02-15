@@ -1,5 +1,5 @@
 function createNewFile(){
-    debugger;
+
     var newItem = prompt('Enter name of file to add');
     var ifExists = findItemByName(newItem);
     if(!ifExists){
