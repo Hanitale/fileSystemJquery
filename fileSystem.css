@@ -145,3 +145,43 @@ menu > menuitem:hover {
     background-color: #e1e1e1;
     cursor: pointer;
 }
+
+
+menu > menuitem {
+    display: none;
+}
+
+menu[data-type=folder] .folder {
+    display: block;
+}
+
+menu[data-type=randomSpot] .randomSpot {
+    display: block;
+}
+
+menu[data-type=file] .file {
+    display: block;
+}
+.textarea{
+    /*width:100%;*/
+    display: flex;
+    display:none;
+    flex-direction: row;
+}
+textarea {
+    top: 100px;
+    position: absolute;
+    left: 200px;
+    right: 500px;
+    bottom: 100px;
+    width: 500px;
+    height: 250px;
+    border: #0c20ff;
+}
+textarea:focus{
+    background-color: lavender;
+}
+
+button{
+align-self: right;
+}

@@ -1,25 +1,44 @@
-
-function createNew(){
-    var newItem = prompt('Enter name of File or Folder to add');
+function createNewFile(){
+    debugger;
+    var newItem = prompt('Enter name of file to add');
     var ifExists = findItemByName(newItem);
     if(!ifExists){
         ++lastId;
-        var itemContent = prompt('Enter text if file');
-        if (itemContent < 1) {
-            var newFolder = {type: 'folder', id: lastId, name: newItem, children: []}
-            currentFolder.children.push(newFolder);
-            updateFolderList(newFolder);
-        } else {
-            currentFolder.children.push({type: 'file', id: lastId, name: newItem, content: itemContent});
-          }
-          showContent();
-    } else {
-        alert('Sorry this name is taken');
+        currentFolder.children.push({type: 'file', id: lastId, name: newItem, content: ''});
+        $('.textarea').css('display', 'block');
+        $('textarea').focusin();
+        $('button.clearFileContent').on('click',clearFileContent);
+        $('button.saveFileContent').on('click', function(){
+            newItem = newItem || 'New File';
+            var itemContent = $('textarea').val();
+            currentFolder.children[currentFolder.children.length -1].content = itemContent;
+            $('.textarea').css('display', 'none');
+          // $('textarea').val('');
+           showContent();
+        })
+     } else {
+        $('.messageArea').text('Sorry, the name '+ newItem + " is taken.");
+        setTimeout(clearMessage, 3000);
     }
 }
 
+function createNewFolder(){
+    var newItem = prompt('Enter name of folder to add');
+    var ifExists = findItemByName(newItem);
+    if(!ifExists){
+        ++lastId;
+        var newFolder = {type: 'folder', id: lastId, name: newItem, children: []}
+        currentFolder.children.push(newFolder);
+        updateFolderList(newFolder);
+    } else {
+        $('.messageArea').text('Sorry, the name '+ newItem + " is taken.");
+        setTimeout(clearMessage, 4000);
+    } showContent();
+}
+
+
 function updateFolderList(item){
-    var htmlToAppend = '<li class="liFolder'+item.id+'"><a href="#" data-id="'
+   var htmlToAppend = '<li class="liFolder'+item.id+'"><a href="#" data-id="'
         + item.id +
         '" ><img src="folders.png"> '
         + item.name + '</a><ul class="collapsed"></ul></li>';
@@ -27,9 +46,22 @@ function updateFolderList(item){
     $(whereToAppend).append(htmlToAppend);
 }
 
+
+
+
+
+function saveFileContent(x , newItem) {
+
+}
+function clearFileContent() {
+    $('textarea').val('');
+    $('textarea').focus();
+
+}
+
 function deleteItem(){
     var itemToDelete = prompt('Enter name of item to delete');
-    var ifExists = getIndexInChildrenArray(itemToDelete);
+    var ifExists = getIndexInFathersChildrenArrayByName(itemToDelete);
     if(!ifExists){
         alert('No Such File or Folder');
     } else {
@@ -53,13 +85,27 @@ function updateFolderListAfterDeletion(id){
     $(whereToAppend).remove()
 }
 
+function updateName(){
+    var newName = prompt('Enter new name');
+    var ifExists = findItemByName(newName);
+    if(!ifExists){
+    var folder = findItemById();
+    folder.name = newName;
+    showFolderList()
+    showContent()
+    } else {
+        $('.messageArea').text('Sorry, the name '+ newName + " is taken.");
+        setTimeout(clearMessage, 3000);
+    }
+}
 
 function saveToTextFile(){
-        var fs = require('fs');
-        var file = './text.txt'
-        var content = JSON.stringify(fileSystem);
-        fs.writeFileSync(file, content, 'utf8');
-        console.log('FileSystem saved Successfully to JSON text.txt');
+    var fs = require('fs');
+    var file = './text.txt'
+    var content = JSON.stringify(fileSystem);
+    fs.writeFileSync(file, content, 'utf8');
+    $('.messageArea').text('FileSystem saved Successfully to JSON text.txt');
+    setTimeout(clearMessage, 3000);
 }
 
 //###################################   UI  ###################################
@@ -67,72 +113,63 @@ function saveToTextFile(){
 $(document).ready(function(){
     "use strict";
       init();
-
 });
 
 function init(){
-
-     showTopMenu()
-     buildRootAndListeners();
-     showContent();
-
+    showTopMenu();
+    buildRootAndListeners();
+    showContent();
+    setRightMenuEventListeners()
 }
-
 
 
 function showTopMenu(){
     $('.path').append(' i am here = ' + currentFolder.name);
-
 }
-
 
 function buildRootAndListeners(){
 
     var htmlToAppend = '<li class="liFolder'+counter+'">' +
-        '<a href="#" data-id="0" id="aRoot">' +
+        '<a href="#" data-id="0" id="aRoot" data-custom ="folder">' +
         '<img src="folders.png"> '+currentFolder.name +'</a>' +
         '<ul class="collapsed"></ul></li>';
     $('.folderList').append(htmlToAppend);
 //---------a listeners:
     var parent = $(".folderList");
     parent.on("click", "a", function() {
-        var whoClicked = $(this).attr('data-id');
-       // alert(whoClicked);
-        collapseExpand(whoClicked);
-//---------right-side-menu:
+    whoClicked = $(this).attr('data-id');
+    collapseExpand();
+
  });
-    $('ul').bind("contextmenu", function (event) {
-        event.preventDefault();
-       // id = ($(event.target).attr('data-id'));
-        $(".custom-menu").finish().toggle(100).css({
-            top: event.pageY + "px",
-            left: event.pageX + "px"
-        });
-    });
 }
 
-function collapseExpand(id){
-    var whereTo = '.liFolder' + id + '> ul';
+function collapseExpand(){
+    var whereTo = '.liFolder' + whoClicked + '> ul';
     if($(whereTo).attr('class') == 'collapsed'){
         $(whereTo).attr('class', 'expanded');
-        showFolderList(id);
+        showFolderList();
+
+
     }else {
+       // debugger;
         $(whereTo).attr('class', 'collapsed');
         $(whereTo).empty();
+        showContent();
     }
 }
-function showFolderList(whoClicked){
+
+function showFolderList(){
     if(currentFolder.children) {
-        console.log(whoClicked);
         currentFolder = findItemById(whoClicked);
-     for (var item of currentFolder.children) {
-        if (item.type == 'folder') {
-            var htmlToAppend = '<li class="liFolder'+item.id+'"><a href="#" data-id="'
-            + item.id +
-            '" ><img src="folders.png"> '
-            + item.name + '</a><ul class="collapsed"></ul></li>';
-                var whereToAppend = '.liFolder' + whoClicked + '> ul';
-               $(whereToAppend).append(htmlToAppend);
+        if(currentFolder.children){
+            for (var item of currentFolder.children) {
+                if (item.type == 'folder') {
+                    var htmlToAppend = '<li class="liFolder'+item.id+'"><a href="#" data-id="'
+                    + item.id +'" data-custom ="folder"><img src="folders.png"> '
+                    + item.name + '</a><ul class="collapsed"></ul></li>';
+                    var whereToAppend = '.liFolder' + whoClicked + '> ul';
+                    $(whereToAppend).append(htmlToAppend);
+                }
             }
         }
         showContent();
@@ -141,20 +178,22 @@ function showFolderList(whoClicked){
 
 
 function showContent() {
-    $('.content').empty();
+   $('.content').empty();
+   currentFolder = findItemById(whoClicked);
     if (currentFolder.children && currentFolder.children.length > 0) {
-        for (var x = 0; x < currentFolder.children.length; x++) {
-            var liFolder = '<span><a href="#"> <img src="folders.png"> '
-                + currentFolder.children[x].name + '</a></span>';
-            var liFile = '<span><a href="#"><img src="File.png"> '
-                + currentFolder.children[x].name + '</a> </span>';
-            if (currentFolder.children[x].type == 'folder') {
+        for (var item of currentFolder.children) {
+            var liFolder = '<span><a href="#" data-custom ="folder" data-id="'+ item.id +'"> <img src="folders.png"> '
+            + item.name + '</a></span>';
+            var liFile = '<span><a href="#" data-custom ="file" data-id="'+ item.id +'"><img src="File.png"> '
+                + item.name + '</a> </span>';
+            if (item.type == 'folder') {
                 $('.content').append(liFolder);
             } else {
                 $('.content').append(liFile);
             }
         }
     }
+    setRightMenuEventListeners()
 }
 
 

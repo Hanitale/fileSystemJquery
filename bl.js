@@ -34,10 +34,11 @@ var fs = [{type:'folder',
     }]
 }];
 
-var lastId = 6;
+var lastId = 7;
 var root = fs[0];
 var currentFolder = root;
 var counter = 0;
+var whoClicked = null;
 
 function fsRecursion(root, visitor) {
     if(root.children){
@@ -50,9 +51,8 @@ function fsRecursion(root, visitor) {
         }
 
     }
-
 }
-function getIndexInChildrenArray(itemName){
+function getIndexInFathersChildrenArrayByName(itemName){
     if(itemName!='root'){
         for(var x=0; x <root.children.length; x++) {
             if(root.children[x].name == itemName) {
@@ -67,23 +67,40 @@ function getIndexInChildrenArray(itemName){
     // throw new Error("Couldn't find a folder by that name");
 }
 
-function findItemByName(itemName) {
-    if(itemName!='root'){
-        for(var item of root.children) {
-            if(item.name == itemName) {
-            return item;
-        }
-        }
-    } else {
-      return root;
+function getIndexInFathersChildrenArrayById(id, fileSystem){
+    debugger;
+    fileSystem = fileSystem || root;
+    for(var x=0; x <fileSystem.children.length; x++) {
+        if(fileSystem.children[x].id == id) {
+            var index = x;
+            return index;
+
+    } else if(fileSystem.children[x].children){
+           index = getIndexInFathersChildrenArrayById(id, fileSystem.children[x]);
+           if(index) return index;
+      }
     }
     return false;
-        // throw new Error("Couldn't find a folder by that name");
+}
+function findItemByName(itemName, fileSystem) {
+    fileSystem = fileSystem || root
+    if(itemName!='root'){
+        for(var item of fileSystem.children) {
+            if(item.name == itemName) {
+            return item;
+        } else if(item.children){
+            var folder = findItemByName(itemName, item);
+            if(folder) return folder;
+
+            }
+        }
+    }
+    return false;         // throw new Error("Couldn't find a folder by that name");
 }
 
 
 function findItemById(id, fileSystem) {
-   if(id == 0) return root;
+   if(whoClicked == 0 || whoClicked == null) return root;
     fileSystem = fileSystem || root;
     for(var item of fileSystem.children) {
         if(item.id == id) {
@@ -99,15 +116,26 @@ function clearMessage(){
 
     $('.messageArea').css('display', 'none');
 }
-function openFile() {
-    var fileName = readlineSync.question('Enter name of File to open');
-    var index = fsRecursion(root, findItemByName);
+
+function openFile(id) {
+    $('button.clearFileContent').on('click',clearFileContent);
+    $('button.saveFileContent').on('click', function(){
+        var itemContent = $('textarea').val();
+        currentFolder.children[currentFolder.children.length -1].content = itemContent;
+        $('.textarea').css('display', 'none');
+        // $('textarea').val('');
+        showContent();
+    })
+    debugger;
+     console.log(whoClicked + 'clicked, currentFolder is' +  currentFolder.name );
+     var index = getIndexInFathersChildrenArrayById(id);
     if(index) {
-        console.log(currentFolder.children[index].content);
-    } else {
-        console.log('No Such File');
+        $('textarea').text(currentFolder.children[index].content);
+        $('.textarea').css('display', 'block');
+        $('textarea').focusin();
     }
 }
+
 function quitProgram() {
     process.exit(0);
 }
