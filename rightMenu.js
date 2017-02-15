@@ -1,26 +1,51 @@
+function setRightMenuEventListeners() {
+    $('[data-custom]').off('contextmenu');
+    $('[data-custom]').on('contextmenu', function (event) {
+        event.stopPropagation();
+        setCustomMenuItemsEventListeners();
+        showContextMenu(event);
+        return false;
+    });
 
-// If the document is clicked somewhere hide the menu
-$(document).bind("mousedown", function (e) {
-    // If the clicked element is not the menu
-    if (!$(e.target).parents(".custom-menu").length > 0) {
-        // Hide it
-        $(".custom-menu").hide(100);
-    }
-});
+    $('.fileSystem').contextmenu(function () { return false; });
+    $(window).click(function () { hideCustomMenu(); });
+}
 
-$('.custom-menu').click(function(e){
+function setCustomMenuItemsEventListeners() {
+    $('.custom-menu > menuitem').off('click');
+    $('.custom-menu > .update').on('click', function () {
+        var id = $('.custom-menu').data('id');
+        alert('update'+ id);
+        updateName(id);
+    });
+    $('.custom-menu > .createFolder').on('click', function () {
+        createNewFolder();
+    });
+    $('.custom-menu > .createFile').on('click', function () {
+       createNewFile();
+    });
+    $('.custom-menu > .delete').on('click', function () {
+       var id = $('.custom-menu').data('id');
+       deleteItem();
+    });
 
-    var id = $(e.target).attr('data-id');
-    $('.custom-menu').css('display', 'block');
-    $('.custom-menu').css('left', e.pageX + 'px');
-    $('.custom-menu').css('top', e.pageY + 'px');
-    $('.custom-menu').data('id', id);
+    $('.custom-menu > .open').on('click', function () {
+       var id = $('.custom-menu').data('id');
+       alert(id);
+       openFile(id);
+    });
+}
 
-    switch($(e.target).attr('data-id')){
-        case "update": console.log("update"); break;
-        case "create": createNew();
-        case "open": console.log("open"); break;
-        case "delete": deleteItem();
-    }
-    $('.custom-menu').hide(100);
-});
+function showContextMenu(e) {
+    var id = $(e.currentTarget).attr('data-id');
+    var type = $(e.currentTarget).attr('data-custom');
+    $('menu.custom-menu').css('display', 'block');
+    $('menu.custom-menu').attr('data-type', type);
+    $('menu.custom-menu').css('left', e.pageX + 'px');
+    $('menu.custom-menu').css('top', e.pageY + 'px');
+    $('menu.custom-menu').data('id', id);
+}
+
+function hideCustomMenu() {
+    $('menu.custom-menu').css('display', 'none');
+}
